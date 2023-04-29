@@ -28,25 +28,22 @@ class WebLibraryApplicationTests {
     @DisplayName("Employee with min salary determined correctly")
     public void testEmployeeWithMinSalaryExist(){
             Employee expcectedEmployee = testEmployeeRepository.returnAllEmployee().get(7);
-            List<Employee> list = (List<Employee>) employeeController.getMinMaxSalary("min").getBody();
-        for (Employee employee : Objects.requireNonNull(list)) {
+        for (Employee employee : Objects.requireNonNull(employeeController.getMinSalary())) {
             Assertions.assertEquals(expcectedEmployee.getSalary(), employee.getSalary());
         }
     }
     @Test
     @DisplayName("Employee with max salary determined correctly")
     public void testEmployeeWithMaxSalaryExist(){
-        Employee expcectedEmployee = testEmployeeRepository.returnAllEmployee().get(7);
-        List<Employee> list = (List<Employee>) employeeController.getMinMaxSalary("max").getBody();
-        for (Employee employee : Objects.requireNonNull(list)) {
+        Employee expcectedEmployee = testEmployeeRepository.returnAllEmployee().get(5);
+        for (Employee employee : Objects.requireNonNull(employeeController.getMaxSalary())) {
             Assertions.assertEquals(expcectedEmployee.getSalary(), employee.getSalary());
         }
     }
     @Test
     @DisplayName("Sum salary determined correctly")
     public void testSalarySumCorrect(){
-        double sum = (double) employeeController.getMinMaxSalary("sum").getBody();
-        Assertions.assertEquals(529000, sum);
+        Assertions.assertEquals(529000, employeeController.getSumSalary());
     }
     @Test
     @DisplayName("List of employee exists and returns")

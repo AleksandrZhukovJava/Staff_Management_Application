@@ -19,29 +19,20 @@ import java.util.List;
 public class EmployeeController {
     private final EmployeeService employeeService;
 
-    @GetMapping("/salary/{address}")
-    public ResponseEntity<?> getMinMaxSalary(@PathVariable String address) {
-        return switch (address) {
-            case "min" -> ResponseEntity.ok().body(employeeService.getMinSalaryEmployee());
-            case "max" -> ResponseEntity.ok().body(employeeService.getMaxSalaryEmployee());
-            case "sum" -> ResponseEntity.ok().body(employeeService.getSalarySum());
-            default -> throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid address");
-        };
-    }
     @GetMapping("/high-salary")
     public List<Employee> getAboveAveragePaidEmployees() {
         return employeeService.getAboveAveragePaidEmployees();
     }
-//    @GetMapping("/salary/max")
-//    public Employee getMaxSalary() {
-//        return employeeService.getMaxSalaryEmployee();
-//    }
-//    @GetMapping("/salary/min")
-//    public Employee getMinSalary() {
-//        return employeeService.getMinSalaryEmployee();
-//    }
-//    @GetMapping("/salary/sum")
-//    public double getSumSalary() {
-//        return employeeService.getSalarySum();
-//    }
+    @GetMapping("/salary/max")
+    public List<Employee> getMaxSalary() {
+        return employeeService.getMaxSalaryEmployee();
+    }
+    @GetMapping("/salary/min")
+    public List<Employee> getMinSalary() {
+        return employeeService.getMinSalaryEmployee();
+    }
+    @GetMapping("/salary/sum")
+    public double getSumSalary() {
+        return employeeService.getSalarySum();
+    }
 }
