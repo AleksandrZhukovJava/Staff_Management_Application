@@ -1,24 +1,43 @@
 package ru.skypro.lessons.springboot.webLibrary.repository;
 
-import org.springframework.stereotype.Repository;
-import ru.skypro.lessons.springboot.webLibrary.model.Employee;
 
-import java.util.ArrayList;
+import lombok.AllArgsConstructor;
+import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
+import ru.skypro.lessons.springboot.webLibrary.config.HibernateSessionUtil;
+import ru.skypro.lessons.springboot.webLibrary.model.Employee;
 import java.util.List;
 @Repository
-public class EmployeeRepositoryImpl implements EmployeeRepository{
-    private final List<Employee> dataBaseImitationList = new ArrayList<>(List.of(
-            new Employee("Employee1",20000),
-            new Employee("Employee2",70000),
-            new Employee("Employee3",20000),
-            new Employee("Employee4",15000),
-            new Employee("FalsePoorGuy",2000),
-            new Employee("FalseRichGuy",200000),
-            new Employee("RichGuy",200000),
-            new Employee("PoorGuy",2000)
-    ));
+@AllArgsConstructor
+public class EmployeeRepositoryImpl implements EmployeeRepository {
+    private final Session session = HibernateSessionUtil.getSessionFactory().openSession();
+
     @Override
     public List<Employee> returnAllEmployee() {
-        return dataBaseImitationList;
+        return session.createQuery("from Employee", Employee.class).getResultList();
+    }
+
+    @Override
+    public Employee returnEmployeeByID(Integer id) {
+        return session.get(Employee.class, id);
+    }
+
+    public List<Employee> returnMinSalaryEmployees() {
+        return session.createQuery("FROM Employee where salary = (Select min(salary) from Employee)", Employee.class).getResultList();
+    }
+
+    @Override
+    public List<Employee> returnMaxSalaryEmployees() {
+        return session.createQuery("FROM Employee where salary = (Select max(salary) from Employee)", Employee.class).getResultList();
+    }
+
+    @Override
+    public double returnSumSalary() {
+        return session.createQuery("SELECT sum(salary) FROM Employee", Double.class).getSingleResult();
+    }
+
+    @Override
+    public List<Employee> getAboveAveragePaidEmployees() {
+        return session.createQuery("FROM Employee WHERE salary > (SELECT avg(salary) from Employee)", Employee.class).getResultList();
     }
 }

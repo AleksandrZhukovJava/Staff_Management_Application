@@ -6,4 +6,10 @@ import java.util.List;
 
 public interface EmployeeRepository {
     List<Employee> returnAllEmployee();
+    Employee returnEmployeeByID(Integer id);
+    List<Employee> returnMinSalaryEmployees();
+    List<Employee> returnMaxSalaryEmployees();
+    double returnSumSalary();
+    List<Employee> getAboveAveragePaidEmployees();
+
 }
