@@ -5,41 +5,33 @@ import org.springframework.stereotype.Service;
 import ru.skypro.lessons.springboot.webLibrary.model.Employee;
 import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     @Override
     public double getSalarySum() {
-        return employeeRepository.returnAllEmployee().stream().map(Employee::getSalary).reduce(0.0, Double::sum);
+        return employeeRepository.returnSumSalary();
     }
 
     @Override
     public List<Employee> getMinSalaryEmployee() {
-        return employeeRepository.returnAllEmployee()
-                .stream()
-                .filter(x -> x.getSalary() == employeeRepository.returnAllEmployee()
-                        .stream()
-                        .min(Comparator.comparingDouble(Employee::getSalary))
-                        .map(Employee::getSalary).orElse(-1.0)).collect(Collectors.toList());
+        return employeeRepository.returnMinSalaryEmployees();
     }
 
     @Override
     public List<Employee> getMaxSalaryEmployee() {
-        return employeeRepository.returnAllEmployee()
-                .stream()
-                .filter(x -> x.getSalary() == employeeRepository.returnAllEmployee()
-                        .stream()
-                        .max(Comparator.comparingDouble(Employee::getSalary))
-                        .map(Employee::getSalary).orElse(-1.0)).collect(Collectors.toList());
+        return employeeRepository.returnMaxSalaryEmployees();
     }
 
     @Override
     public List<Employee> getAboveAveragePaidEmployees() {
-        return employeeRepository.returnAllEmployee().stream().filter(x -> x.getSalary() > getSalarySum() / employeeRepository.returnAllEmployee().size()).collect(Collectors.toList());
+        return employeeRepository.getAboveAveragePaidEmployees();
     }
+
 }
