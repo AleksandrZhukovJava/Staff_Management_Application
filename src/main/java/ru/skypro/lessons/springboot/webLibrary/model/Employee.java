@@ -1,15 +1,15 @@
 package ru.skypro.lessons.springboot.webLibrary.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 
-@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Table(name = "employees")
 public class Employee {
     @Id
@@ -20,5 +20,4 @@ public class Employee {
     private String name;
     @Column(name = "salary")
     private double salary;
-
 }

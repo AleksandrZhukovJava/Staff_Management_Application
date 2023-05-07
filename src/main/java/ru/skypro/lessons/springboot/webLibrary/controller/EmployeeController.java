@@ -10,8 +10,10 @@ import ru.skypro.lessons.springboot.webLibrary.service.EmployeeService;
 @RestController
 @RequestMapping("/employee")
 @AllArgsConstructor
+
 public class EmployeeController {
     private final EmployeeService employeeService;
+
     @GetMapping("/high-salary")
     public ModelAndView getAboveAveragePaidEmployees() {
         ModelAndView modelAndView = new ModelAndView();

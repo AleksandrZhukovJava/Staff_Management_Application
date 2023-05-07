@@ -2,17 +2,18 @@ package ru.skypro.lessons.springboot.webLibrary.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.skypro.lessons.springboot.webLibrary.model.Employee;
 import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @Transactional
-public class EmployeeServiceImpl implements EmployeeService {
+@AllArgsConstructor
+public class EmployeeServiceImpl implements EmployeeService{
     private final EmployeeRepository employeeRepository;
+
 
     @Override
     public double getSalarySum() {
