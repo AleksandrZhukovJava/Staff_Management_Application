@@ -16,11 +16,9 @@ import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.webLibrary.service.EmployeeService;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @AutoConfigureMockMvc
@@ -45,52 +43,81 @@ class WebLibraryApplicationTests {
         assertThat(myTestRepository).isNotNull();
         assertThat(myTestService).isNotNull();
     }
+
     @Test
-    void shouldReturnAllEmployee(){
-        assertThat(session.createQuery("from Employee", Employee.class).getResultList().size()).isNotEqualTo(0);
+    @DisplayName("Employees with max salary returned successfully")
+    public void testGetMaxSalaryRoute() throws Exception {
+        mockMvc.perform(get("/employee/salary/max"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("max"))
+                .andExpect(model().attributeExists("employees"))
+                .andExpect(model().attribute("employees", hasSize(2)))
+                .andExpect(model().attribute("employees", hasItems(
+                        allOf(
+                                hasProperty("name", is("Mr.Director")),
+                                hasProperty("salary", is(40000.00))
+                        ),
+                        allOf(
+                                hasProperty("name", is("Mr.Accountant")),
+                                hasProperty("salary", is(40000.00))
+                        )
+                )));
     }
     @Test
     @DisplayName("Employees with min salary returned successfully")
-    void shouldReturnEmployeeWithMinSalary() throws Exception {
-
+    public void testGetMinSalaryRoute() throws Exception {
         mockMvc.perform(get("/employee/salary/min"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("Uborshik")))
-                .andExpect(jsonPath("$[0].salary", is(2000.0)))
-                .andExpect(jsonPath("$[1].name", is("PoorGuyFake")))
-                .andExpect(jsonPath("$[1].salary", is(2000.0)));
+                .andExpect(view().name("min"))
+                .andExpect(model().attributeExists("employees"))
+                .andExpect(model().attribute("employees", hasSize(2)))
+                .andExpect(model().attribute("employees", hasItems(
+                        allOf(
+                                hasProperty("name", is("Uborshik")),
+                                hasProperty("salary", is(2000.00))
+                        ),
+                        allOf(
+                                hasProperty("name", is("PoorGuyFake")),
+                                hasProperty("salary", is(2000.00))
+                        )
+                )));
     }
-    @Test
-    @DisplayName("Employees with max salary returned successfully")
-    void shouldReturnEmployeeWithMaxSalary() throws Exception {
 
-        mockMvc.perform(get("/employee/salary/max"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("Mr.Director")))
-                .andExpect(jsonPath("$[0].salary", is(40000.00)))
-                .andExpect(jsonPath("$[1].name", is("Mr.Accountant")))
-                .andExpect(jsonPath("$[1].salary", is(40000.00)));
+    @Test
+    @DisplayName("Employees added to list")
+    void shouldReturnAllEmployee() {
+        assertThat(session.createQuery("from Employee", Employee.class).getResultList().size()).isNotEqualTo(0);
     }
     @Test
     @DisplayName("Summary salary returned correct")
     void shouldReturnSumSalary() throws Exception {
         mockMvc.perform(get("/employee/salary/sum"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is(144000.00)));
+                .andExpect(model().attribute("sum",is(144000.00)));
     }
+
     @Test
     @DisplayName("Employees with salaries above average returned successfully")
     void shouldReturnEmployeesWithAboveAverageSalary() throws Exception {
         mockMvc.perform(get("/employee/high-salary"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name", is("Konstantin")))
-                .andExpect(jsonPath("$[0].salary", is(25000.00)))
-                .andExpect(jsonPath("$[1].name", is("Mr.Director")))
-                .andExpect(jsonPath("$[1].salary", is(40000.00)))
-                .andExpect(jsonPath("$[2].name", is("Mr.Accountant")))
-                .andExpect(jsonPath("$[2].salary", is(40000.00)));
+                .andExpect(view().name("high-salary"))
+                .andExpect(model().attributeExists("employees"))
+                .andExpect(model().attribute("employees", hasSize(3)))
+                .andExpect(model().attribute("employees", hasItems(
+                        allOf(
+                                hasProperty("name", is("Mr.Director")),
+                                hasProperty("salary", is(40000.00))
+                        ),
+                        allOf(
+                                hasProperty("name", is("Mr.Accountant")),
+                                hasProperty("salary", is(40000.00))
+                        ),
+                        allOf(
+                                hasProperty("name", is("Konstantin")),
+                                hasProperty("salary", is(25000.00))
+                        )
+                )));
     }
 }
 
