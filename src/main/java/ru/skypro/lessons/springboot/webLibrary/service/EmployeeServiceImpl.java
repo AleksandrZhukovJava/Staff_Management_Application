@@ -21,41 +21,53 @@ public class EmployeeServiceImpl implements EmployeeService {
     public double getSalarySum() {
         return employeeRepository.returnSumSalary();
     }
+
     @Override
     public List<Employee> getMinSalaryEmployee() {
         return employeeRepository.returnMinSalaryEmployees();
     }
+
     @Override
     public List<Employee> getMaxSalaryEmployee() {
         return employeeRepository.returnMaxSalaryEmployees();
     }
+
     @Override
     public List<Employee> getAboveAveragePaidEmployees() {
         return employeeRepository.getAboveAveragePaidEmployees();
     }
+
     @Override
-    public List<Employee> getEmployeesWithSalaryMoreThan(double salary) throws IllegalArgumentException{
+    public List<Employee> getEmployeesWithSalaryMoreThan(double salary) throws IllegalArgumentException {
         modelValidation(salary);
         return employeeRepository.getEmployeesWithSalaryMoreThan(salary);
     }
+
     @Override
-    public Employee getEmployeeById(int id) throws IllegalArgumentException{
+    public Employee getEmployeeById(Long id) throws IllegalArgumentException {
         modelValidation(id);
-        return employeeRepository.getEmployeeById(id);
+        return employeeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
+
     @Override
-    public void deleteEmployeeById(int id) throws IllegalArgumentException{
+    public void deleteEmployeeById(Long id) throws IllegalArgumentException {
         modelValidation(id);
-        employeeRepository.deleteEmployeeById(id);
+        employeeRepository.deleteById(id);
     }
+
     @Override
-    public void changeEmployeeById(Employee employee, int id) throws IllegalArgumentException{
+    public void changeEmployeeById(Employee employee, Long id) throws IllegalArgumentException {
         modelValidation(employee);
-        employeeRepository.changeEmployeeById(employee.getId(), employee.getName(), employee.getSalary(), id);
+        employee.setId(employeeRepository
+                .findById(id)
+                .orElseThrow(IllegalArgumentException::new)
+                .getId());
+        employeeRepository.save(employee);
     }
+
     @Override
-    public void createEmployees(List<Employee> listOfNewEmployee) throws IllegalArgumentException{
+    public void createEmployees(List<Employee> listOfNewEmployee) throws IllegalArgumentException {
         listOfNewEmployee.stream().forEach(ModelValidation::modelValidation);
-            employeeRepository.saveAll(listOfNewEmployee);
+        employeeRepository.saveAll(listOfNewEmployee);
     }
 }
