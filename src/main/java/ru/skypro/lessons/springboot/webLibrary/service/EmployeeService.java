@@ -10,8 +10,8 @@ public interface EmployeeService {
     List<Employee> getMaxSalaryEmployee();
     List<Employee> getAboveAveragePaidEmployees();
     List<Employee> getEmployeesWithSalaryMoreThan(double salary);
-    Employee getEmployeeById(int id);
-    void deleteEmployeeById(int id);
-    void changeEmployeeById(Employee employee, int id);
+    Employee getEmployeeById(Long id);
+    void deleteEmployeeById(Long id);
+    void changeEmployeeById(Employee employee, Long id);
     void createEmployees(List<Employee> listOfNewEmployee);
 }

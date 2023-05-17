@@ -11,8 +11,6 @@ import java.util.List;
 
 @Repository
 public interface EmployeeRepository extends CrudRepository<Employee, Long> {
-    @Query("select e FROM Employee e")
-    public List<Employee> returnAllEmployee();
     @Query("SELECT e FROM Employee e where e.salary = (Select min(salary) from Employee)")
     List<Employee> returnMinSalaryEmployees();
     @Query("SELECT e FROM Employee e where e.salary = (Select max(salary) from Employee)")
@@ -23,12 +21,4 @@ public interface EmployeeRepository extends CrudRepository<Employee, Long> {
     List<Employee> getAboveAveragePaidEmployees();
     @Query("SELECT e FROM Employee e WHERE e.salary > :salary")
     List<Employee> getEmployeesWithSalaryMoreThan(@Param("salary") double salary);
-    @Query("SELECT e FROM Employee e WHERE e.id = :id")
-    Employee getEmployeeById(@Param("id") int id);
-    @Modifying
-    @Query(value = "DELETE FROM employees e WHERE e.id = :id", nativeQuery = true)
-    void deleteEmployeeById(@Param("id") int id); //Знаю что есть стандартные методы, но хотелось попробовать самому написать
-    @Modifying
-    @Query(value = "UPDATE employees SET id = :id, name = :name, salary = :salary where id = :employeeId", nativeQuery = true)
-    void changeEmployeeById(@Param("id") int id, @Param("name") String name, @Param("salary") double salary, @Param("employeeId") int employeeId);
 }

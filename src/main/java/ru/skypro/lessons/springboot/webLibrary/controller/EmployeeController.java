@@ -13,13 +13,6 @@ import java.util.List;
 
 public class EmployeeController {
     private final EmployeeService employeeService;
-    @GetMapping("/salary")
-    public ModelAndView getIndexPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("main");
-        return modelAndView;
-    }
-
     @GetMapping("/salary/high-salary")
     public List<Employee> getAboveAveragePaidEmployees() {
         return employeeService.getAboveAveragePaidEmployees();
@@ -41,15 +34,15 @@ public class EmployeeController {
         return employeeService.getEmployeesWithSalaryMoreThan(compareSalary);
     }
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable int id) {
+    public Employee getEmployeeById(@PathVariable Long id) {
         return employeeService.getEmployeeById(id);
     }
     @DeleteMapping("/{id}")
-    public void removeEmployeeById(@PathVariable int id) {
+    public void removeEmployeeById(@PathVariable Long id) {
         employeeService.deleteEmployeeById(id);
     }
     @PutMapping("/{id}")
-    public void changeEmployeeById(@PathVariable int id, @RequestBody Employee employee) {
+    public void changeEmployeeById(@PathVariable Long id, @RequestBody Employee employee) {
         employeeService.changeEmployeeById(employee, id);
     }
     @PostMapping("/")
