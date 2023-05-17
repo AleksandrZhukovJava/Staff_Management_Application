@@ -1,6 +1,5 @@
 package ru.skypro.lessons.springboot.webLibrary;
 
-import org.hibernate.Session;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,9 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.skypro.lessons.springboot.webLibrary.config.HibernateSessionUtil;
 import ru.skypro.lessons.springboot.webLibrary.controller.EmployeeController;
-import ru.skypro.lessons.springboot.webLibrary.model.Employee;
 import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.webLibrary.service.EmployeeService;
 
@@ -34,7 +31,6 @@ class WebLibraryApplicationTests {
     private EmployeeRepository myTestRepository;
     @Autowired
     private EmployeeService myTestService;
-    private final Session session = HibernateSessionUtil.getSessionFactory().openSession();
 
     @Test
     @DisplayName("Beans created successfully ")
@@ -83,11 +79,6 @@ class WebLibraryApplicationTests {
                 )));
     }
 
-    @Test
-    @DisplayName("Employees added to list")
-    void shouldReturnAllEmployee() {
-        assertThat(session.createQuery("from Employee", Employee.class).getResultList().size()).isNotEqualTo(0);
-    }
     @Test
     @DisplayName("Summary salary returned correct")
     void shouldReturnSumSalary() throws Exception {
