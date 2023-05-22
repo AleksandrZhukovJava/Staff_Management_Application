@@ -9,12 +9,13 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice
 public class EmployeeExceptionHandler {
-    @ExceptionHandler (value = {NumberFormatException.class, IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<?> handleNumberFormatException(){
+    @ExceptionHandler(value = {NumberFormatException.class, IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<?> handleNumberFormatException() {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler
-    public ResponseEntity<?> handleSQLException(Exception exception){
+    public ResponseEntity<?> handleSQLException(Exception exception) {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
