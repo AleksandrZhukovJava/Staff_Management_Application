@@ -1,6 +1,6 @@
 package ru.skypro.lessons.springboot.webLibrary.utility;
 
-import ru.skypro.lessons.springboot.webLibrary.model.Employee;
+import ru.skypro.lessons.springboot.webLibrary.pojo.Employee;
 
 public class ModelValidation {
     public static void modelValidation(Employee employee) throws IllegalArgumentException{
@@ -18,4 +18,5 @@ public class ModelValidation {
             throw new IllegalArgumentException();
         }
     }
+
 }

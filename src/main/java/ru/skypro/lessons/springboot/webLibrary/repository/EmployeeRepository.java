@@ -1,24 +1,48 @@
 package ru.skypro.lessons.springboot.webLibrary.repository;
 
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-import ru.skypro.lessons.springboot.webLibrary.model.Employee;
+import ru.skypro.lessons.springboot.webLibrary.models.projections.projections.EmployeesInfo;
+import ru.skypro.lessons.springboot.webLibrary.pojo.Employee;
 
 import java.util.List;
 
-@Repository
-public interface EmployeeRepository extends CrudRepository<Employee, Long> {
-    @Query("SELECT e FROM Employee e where e.salary = (Select min(salary) from Employee)")
+public interface EmployeeRepository extends CrudRepository<Employee, Integer>, PagingAndSortingRepository<Employee, Integer> {
+
+    @Query("SELECT e,p FROM Employee e JOIN FETCH e.position p WHERE e.salary = (SELECT MIN(e.salary) FROM Employee e)")
     List<Employee> returnMinSalaryEmployees();
-    @Query("SELECT e FROM Employee e where e.salary = (Select max(salary) from Employee)")
+
+
+    @Query("SELECT e,p FROM Employee e JOIN FETCH Position p ON e.position = p where e.salary = (Select max(salary) from Employee)")
     List<Employee> returnMaxSalaryEmployees();
+
     @Query("SELECT sum(salary) FROM Employee")
     double returnSumSalary();
-    @Query("SELECT e FROM Employee e WHERE e.salary > (SELECT avg(salary) from Employee)")
+
+    @Query("SELECT e,p FROM Employee e JOIN FETCH Position p ON e.position = p WHERE e.salary > (SELECT avg(salary) from Employee)")
     List<Employee> getAboveAveragePaidEmployees();
-    @Query("SELECT e FROM Employee e WHERE e.salary > :salary")
-    List<Employee> getEmployeesWithSalaryMoreThan(@Param("salary") double salary);
+
+    @Query("SELECT e,p FROM Employee e JOIN FETCH Position p ON e.position = p WHERE e.salary > :salary")
+    List<Employee> findAllBySalaryIsBiggerThan(@Param("salary") double salary);
+
+    @Query("SELECT e,p FROM Employee e JOIN FETCH Position p ON e.position = p WHERE e.id = :id")
+    Employee getById(@Param("id") Integer id);
+
+    @Query(value = "SELECT new ru.skypro.lessons.springboot.webLibrary.models.projections.projections.EmployeesInfo (e.name, e.salary, p.name) " +
+            "FROM Employee e JOIN FETCH Position p ON e.position = p")
+    List<EmployeesInfo> findAllEmployeesView();
+
+    @Query(value = "SELECT new ru.skypro.lessons.springboot.webLibrary.models.projections.projections.EmployeesInfo (e.name, e.salary, p.name) " +
+            "FROM Employee e JOIN FETCH Position p ON e.position = p WHERE p.id = :id")
+    List<EmployeesInfo> findEmployeeByIdView(@Param ("id") Integer id);
+
+    @Query("SELECT e,p FROM Employee e JOIN FETCH Position p ON e.position = p WHERE e.position.name = :position")
+    List<Employee> returnAllByPositionName(@Param("position") String position);
+    @Query("SELECT e,p FROM Employee e JOIN FETCH Position p ON e.position = p WHERE e.position.id = :id")
+    List<Employee> returnAllByPositionId(@Param("id") Integer id);
+    @Query("SELECT e,p FROM Employee e JOIN FETCH Position p ON e.position = p")
+    List<Employee> findAllEmployees();
+
 }
