@@ -1,20 +1,25 @@
-package ru.skypro.lessons.springboot.webLibrary.service;
+package ru.skypro.lessons.springboot.webLibrary.service.employee;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.lessons.springboot.webLibrary.domains.entity.Employee;
+import ru.skypro.lessons.springboot.webLibrary.domains.entity.Position;
 import ru.skypro.lessons.springboot.webLibrary.models.dto.EmployeeDTO;
-import ru.skypro.lessons.springboot.webLibrary.models.projections.projections.EmployeesInfo;
-import ru.skypro.lessons.springboot.webLibrary.pojo.Employee;
+import ru.skypro.lessons.springboot.webLibrary.models.projections.EmployeesInfo;
 import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
-import ru.skypro.lessons.springboot.webLibrary.utility.ModelValidation;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import static ru.skypro.lessons.springboot.webLibrary.utility.ModelValidation.modelValidation;
+import static ru.skypro.lessons.springboot.webLibrary.utility.Validation.modelValidation;
 
 @Service
 @Transactional
@@ -43,25 +48,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDTO> getEmployeesWithSalaryMoreThan(double salary) throws IllegalArgumentException {
+    public List<EmployeeDTO> getEmployeesWithSalaryMoreThan(double salary) {
         modelValidation(salary);
         return employeeRepository.findAllBySalaryIsBiggerThan(salary).stream().map(EmployeeDTO::fromEmployee).toList();
     }
 
     @Override
-    public EmployeeDTO getEmployeeById(Integer id) throws IllegalArgumentException {
+    public EmployeeDTO getEmployeeById(Integer id) {
         modelValidation(id);
         return EmployeeDTO.fromEmployee(employeeRepository.getById(id));
     }
 
     @Override
-    public void deleteEmployeeById(Integer id) throws IllegalArgumentException {
+    public void deleteEmployeeById(Integer id) {
         modelValidation(id);
         employeeRepository.deleteById(id);
     }
 
     @Override
-    public void changeEmployeeById(EmployeeDTO employeeDTO, Integer id) throws IllegalArgumentException {
+    public void changeEmployeeById(EmployeeDTO employeeDTO, Integer id) {
         Employee resultEmployee = employeeDTO.toEmployee();
         modelValidation(resultEmployee);
         resultEmployee.setId(employeeRepository
@@ -72,10 +77,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void createEmployees(List<EmployeeDTO> listOfNewEmployeesDTO) throws IllegalArgumentException {
+    public void createEmployees(List<EmployeesInfo> listOfNewEmployeesDTO) {
         if (listOfNewEmployeesDTO != null) {
-            List<Employee> resultList = listOfNewEmployeesDTO.stream().map(EmployeeDTO::toEmployee).toList();
-            resultList.forEach(ModelValidation::modelValidation);
+            List<Employee> resultList = new ArrayList<>();
+            for (EmployeesInfo employeesInfo : listOfNewEmployeesDTO) {
+                Position position = employeeRepository.findPositionByName(employeesInfo.getPositionName());
+                resultList.add(new Employee(
+                        employeesInfo.getName(),
+                        employeesInfo.getSalary(),
+                        position != null ?
+                                position :
+                                new Position(employeesInfo.getPositionName())));
+            }
             employeeRepository.saveAll(resultList);
         } else throw new IllegalArgumentException();
     }
@@ -99,7 +112,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .stream()
                         .map(EmployeeDTO::fromEmployee)
                         .toList();
-            } catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 return employeeRepository.returnAllByPositionName(position)
                         .stream()
                         .map(EmployeeDTO::fromEmployee)
@@ -120,8 +133,17 @@ public class EmployeeServiceImpl implements EmployeeService {
             int pageNumber = number.isBlank() ? 0 : Integer.parseInt(number);
             Pageable pageRequest = PageRequest.of(pageNumber, 10);
             return employeeRepository.findAll(pageRequest).stream().map(EmployeeDTO::fromEmployee).toList();
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public void createEmployeesByJson(MultipartFile file) throws IOException {
+        List<EmployeeDTO> list = new ObjectMapper().readValue(file.getInputStream(), new TypeReference<List<EmployeeDTO>>() {
+        });
+        employeeRepository.saveAll(list.stream()
+                .map(EmployeeDTO::toEmployee)
+                .toList());
     }
 }

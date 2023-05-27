@@ -2,18 +2,20 @@ package ru.skypro.lessons.springboot.webLibrary.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.webLibrary.models.dto.EmployeeDTO;
-import ru.skypro.lessons.springboot.webLibrary.models.projections.projections.EmployeesInfo;
-import ru.skypro.lessons.springboot.webLibrary.service.EmployeeService;
+import ru.skypro.lessons.springboot.webLibrary.models.projections.EmployeesInfo;
+import ru.skypro.lessons.springboot.webLibrary.service.employee.EmployeeService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
 @AllArgsConstructor
 @Tag(name = "Employees data base actions")
-
 public class EmployeeController {
     private final EmployeeService employeeService;
     @GetMapping("/salary/high-salary")
@@ -49,7 +51,7 @@ public class EmployeeController {
         employeeService.changeEmployeeById(employeeDTO, id);
     }
     @PostMapping("/")
-    public void createEmployees(@RequestBody List<EmployeeDTO> listOfNewEmployeesDTO) {
+    public void createEmployees(@RequestBody List<EmployeesInfo> listOfNewEmployeesDTO) {
         employeeService.createEmployees(listOfNewEmployeesDTO);
     }
     @GetMapping("/salary/all")
@@ -67,5 +69,9 @@ public class EmployeeController {
     @GetMapping("/page")
     public List<EmployeeDTO> returnEmployeesByPageNumber(@RequestParam("page") String page) {
         return employeeService.returnEmployeesByPageNumber(page);
+    }
+    @PostMapping(value = "/upload" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void createEmployeesByJson(@RequestParam("json") MultipartFile file) throws IOException {
+        employeeService.createEmployeesByJson(file);
     }
 }

@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.skypro.lessons.springboot.webLibrary.pojo.Employee;
+import ru.skypro.lessons.springboot.webLibrary.domains.entity.Employee;
+
+import java.io.Serializable;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeDTO {
+public class EmployeeDTO implements Serializable {
     private Integer id;
     private String name;
     private double salary;

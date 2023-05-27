@@ -10,9 +10,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.skypro.lessons.springboot.webLibrary.controller.EmployeeController;
-import ru.skypro.lessons.springboot.webLibrary.pojo.Employee;
+import ru.skypro.lessons.springboot.webLibrary.domains.entity.Employee;
 import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
-import ru.skypro.lessons.springboot.webLibrary.service.EmployeeService;
+import ru.skypro.lessons.springboot.webLibrary.service.employee.EmployeeService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,18 +56,18 @@ class WebLibraryApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("Oleg")))
-                .andExpect(jsonPath("$[0].salary", is(10000.0)));
+                .andExpect(jsonPath("$[0].salary", is(9000.00)));
     }
 
     @Test
     @DisplayName("Employees with max salary returned successfully")
     void shouldReturnEmployeeWithMaxSalary() throws Exception {
-        mockMvc.perform(get("/employee/salary/max"))
+        mockMvc.perform(get("/employee/withHighestSalary"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("Sasha")))
+                .andExpect(jsonPath("$[0].name", is("FakeSasha")))
                 .andExpect(jsonPath("$[0].salary", is(60000.00)))
-                .andExpect(jsonPath("$[1].name", is("FakeSasha")))
+                .andExpect(jsonPath("$[1].name", is("Sasha")))
                 .andExpect(jsonPath("$[1].salary", is(60000.00)));
     }
 
@@ -76,7 +76,7 @@ class WebLibraryApplicationTests {
     void shouldReturnSumSalary() throws Exception {
         mockMvc.perform(get("/employee/salary/sum"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is(250000.00)));
+                .andExpect(jsonPath("$", is(319000.0)));
     }
 
     @Test
@@ -84,12 +84,17 @@ class WebLibraryApplicationTests {
     void shouldReturnEmployeesWithAboveAverageSalary() throws Exception {
         mockMvc.perform(get("/employee/salary/high-salary"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name", is("Petya")))
-                .andExpect(jsonPath("$[0].salary", is(50000.00)))
-                .andExpect(jsonPath("$[1].name", is("Sasha")))
-                .andExpect(jsonPath("$[1].salary", is(60000.00)))
-                .andExpect(jsonPath("$[2].name", is("FakeSasha")))
-                .andExpect(jsonPath("$[2].salary", is(60000.00)));
+                .andExpect(jsonPath("$[0].name", is("Genadiiy")))
+                .andExpect(jsonPath("$[0].salary", is(30000.00)))
+                .andExpect(jsonPath("$[1].name", is("Kolya")))
+                .andExpect(jsonPath("$[1].salary", is(40000.00)))
+                .andExpect(jsonPath("$[2].name", is("Petya")))
+                .andExpect(jsonPath("$[2].salary", is(50000.00)))
+                .andExpect(jsonPath("$[3].name", is("FakeSasha")))
+                .andExpect(jsonPath("$[3].salary", is(60000.00)))
+                .andExpect(jsonPath("$[4].name", is("Sasha")))
+                .andExpect(jsonPath("$[4].salary", is(60000.00)));
+
     }
 
     @Test
@@ -97,10 +102,11 @@ class WebLibraryApplicationTests {
     void shouldReturnEmployeesWithSalaryMoreThanAverage() throws Exception {
         mockMvc.perform(get("/employee/salary/salaryHigherThan?salary=" + 59999.00))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$[0].name", is("Sasha")))
+                .andExpect(jsonPath("$[0].name", is("FakeSasha")))
                 .andExpect(jsonPath("$[0].salary", is(60000.00)))
-                .andExpect(jsonPath("$[1].name", is("FakeSasha")))
+                .andExpect(jsonPath("$[1].name", is("Sasha")))
                 .andExpect(jsonPath("$[1].salary", is(60000.00)));
+
 
 
     }
@@ -117,16 +123,16 @@ class WebLibraryApplicationTests {
     @Test
     @DisplayName("Employee was created and deleted successfully")
     void shouldDeleteEmployeeById() throws Exception {
-        Employee testEmployee = new Employee(100,1.00,"test",null);
+        Employee testEmployee = new Employee(100, 1.00, "test", null);
         myTestRepository.save(testEmployee);
         List<Employee> testList = new ArrayList<>();
         myTestRepository.findAll().forEach(testList::add);
         mockMvc.perform(delete("/employee/" + testList
-                .stream()
-                .filter(x -> x.getName().equals(testEmployee.getName()))
-                .mapToLong(Employee::getId)
-                .findFirst().orElse(0)
-        ))
+                        .stream()
+                        .filter(x -> x.getName().equals(testEmployee.getName()))
+                        .mapToLong(Employee::getId)
+                        .findFirst().orElse(0)
+                ))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
