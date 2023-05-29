@@ -1,8 +1,8 @@
 package ru.skypro.lessons.springboot.webLibrary.utility;
 
-import ru.skypro.lessons.springboot.webLibrary.pojo.Employee;
+import ru.skypro.lessons.springboot.webLibrary.domains.entity.Employee;
 
-public class ModelValidation {
+public class Validation {
     public static void modelValidation(Employee employee) throws IllegalArgumentException{
         if (employee.getId() <= 0 || employee.getName().isBlank() || employee.getSalary() < 0){
             throw new IllegalArgumentException();

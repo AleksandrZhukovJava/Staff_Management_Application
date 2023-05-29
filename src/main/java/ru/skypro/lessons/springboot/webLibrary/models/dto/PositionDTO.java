@@ -4,12 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.skypro.lessons.springboot.webLibrary.pojo.Position;
+import ru.skypro.lessons.springboot.webLibrary.domains.entity.Position;
+
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PositionDTO {
+public class PositionDTO implements Serializable {
     private Integer id;
     private String name;
 
