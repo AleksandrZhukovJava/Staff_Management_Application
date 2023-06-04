@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skypro.lessons.springboot.webLibrary.domains.entity.Report;
+import ru.skypro.lessons.springboot.webLibrary.models.projections.ReportInfo;
 import ru.skypro.lessons.springboot.webLibrary.repository.ReportRepository;
 
 import java.io.IOException;
+import java.util.List;
 
 import static ru.skypro.lessons.springboot.webLibrary.utility.Validation.modelValidation;
 
@@ -19,8 +21,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public Integer addReport() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return reportRepository.save(new Report(null, objectMapper.writeValueAsString(reportRepository.getReportInfo()).getBytes())).getId();
+        return reportRepository.save(new Report(null, new ObjectMapper().writeValueAsString(reportRepository.getReportInfo()).getBytes())).getId();
     }
 
     @Override

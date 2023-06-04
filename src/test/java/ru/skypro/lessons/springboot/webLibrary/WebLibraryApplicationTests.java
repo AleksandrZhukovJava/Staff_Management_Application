@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.skypro.lessons.springboot.webLibrary.controller.EmployeeController;
+import ru.skypro.lessons.springboot.webLibrary.controller.EmployeeAdminController;
 import ru.skypro.lessons.springboot.webLibrary.domains.entity.Employee;
 import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.webLibrary.service.employee.EmployeeService;
@@ -34,7 +34,7 @@ class WebLibraryApplicationTests {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private EmployeeController myTestController;
+    private EmployeeAdminController myTestController;
     @Autowired
     private EmployeeRepository myTestRepository;
     @Autowired
@@ -106,9 +106,6 @@ class WebLibraryApplicationTests {
                 .andExpect(jsonPath("$[0].salary", is(60000.00)))
                 .andExpect(jsonPath("$[1].name", is("Sasha")))
                 .andExpect(jsonPath("$[1].salary", is(60000.00)));
-
-
-
     }
 
     @Test

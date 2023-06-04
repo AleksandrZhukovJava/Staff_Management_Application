@@ -1,6 +1,7 @@
 package ru.skypro.lessons.springboot.webLibrary.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.lessons.springboot.webLibrary.service.report.ReportService;
 
 import java.io.IOException;
-
 @RestController
 @RequestMapping("/report")
 @AllArgsConstructor
@@ -24,7 +24,7 @@ public class ReportController {
         return reportService.addReport();
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Resource> getEmployeeById(@PathVariable Integer id) {
+    public ResponseEntity<Resource> getReportById(@PathVariable Integer id) {
         String fileName = "report.json";
         Resource resource = new ByteArrayResource(reportService.getReportById(id));
         return ResponseEntity.ok()
