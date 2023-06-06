@@ -11,12 +11,12 @@ import ru.skypro.lessons.springboot.webLibrary.security.SecurityUserDetails;
 
 @Service
 @AllArgsConstructor
-public class SecurityUserDetailsService implements UserDetailsService, UserDTOMapper {
+public class SecurityUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-                .map(this::fromUser)
+                .map(UserDTOMapper::fromUser)
                 .map(SecurityUserDetails::new)
                 .orElseThrow(()-> new UsernameNotFoundException(String.format("Username %s not found",username)));
     }

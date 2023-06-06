@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skypro.lessons.springboot.webLibrary.models.dto.PositionDTO;
+import ru.skypro.lessons.springboot.webLibrary.models.mapper.PositionDTOMapper;
 import ru.skypro.lessons.springboot.webLibrary.repository.PositionRepository;
 
 import java.util.List;
@@ -16,6 +17,6 @@ public class PositionServiceImpl implements PositionService {
     private final PositionRepository positionRepository;
     @Override
     public List<PositionDTO> findAll() {
-        return StreamSupport.stream(positionRepository.findAll().spliterator(), false).map(PositionDTO::fromPosition).toList();
+        return StreamSupport.stream(positionRepository.findAll().spliterator(), false).map(PositionDTOMapper::fromPosition).toList();
     }
 }

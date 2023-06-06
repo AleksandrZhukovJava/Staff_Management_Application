@@ -1,7 +1,6 @@
 package ru.skypro.lessons.springboot.webLibrary.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;

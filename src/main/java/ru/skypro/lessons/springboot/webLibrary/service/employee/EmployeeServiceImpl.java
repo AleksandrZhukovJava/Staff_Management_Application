@@ -11,10 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.webLibrary.domains.entity.Employee;
 import ru.skypro.lessons.springboot.webLibrary.domains.entity.Position;
 import ru.skypro.lessons.springboot.webLibrary.models.dto.EmployeeDTO;
+import ru.skypro.lessons.springboot.webLibrary.models.mapper.EmployeeDTOMapper;
 import ru.skypro.lessons.springboot.webLibrary.models.projections.EmployeesInfo;
 import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
-
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -34,29 +34,29 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeDTO> getMinSalaryEmployee() {
-        return employeeRepository.returnMinSalaryEmployees().stream().map(EmployeeDTO::fromEmployee).toList();
+        return employeeRepository.returnMinSalaryEmployees().stream().map(EmployeeDTOMapper::fromEmployee).toList();
     }
 
     @Override
     public List<EmployeeDTO> getMaxSalaryEmployee() {
-        return employeeRepository.returnMaxSalaryEmployees().stream().map(EmployeeDTO::fromEmployee).toList();
+        return employeeRepository.returnMaxSalaryEmployees().stream().map(EmployeeDTOMapper::fromEmployee).toList();
     }
 
     @Override
     public List<EmployeeDTO> getAboveAveragePaidEmployees() {
-        return employeeRepository.getAboveAveragePaidEmployees().stream().map(EmployeeDTO::fromEmployee).toList();
+        return employeeRepository.getAboveAveragePaidEmployees().stream().map(EmployeeDTOMapper::fromEmployee).toList();
     }
 
     @Override
     public List<EmployeeDTO> getEmployeesWithSalaryMoreThan(double salary) {
         modelValidation(salary);
-        return employeeRepository.findAllBySalaryIsBiggerThan(salary).stream().map(EmployeeDTO::fromEmployee).toList();
+        return employeeRepository.findAllBySalaryIsBiggerThan(salary).stream().map(EmployeeDTOMapper::fromEmployee).toList();
     }
 
     @Override
     public EmployeeDTO getEmployeeById(Integer id) {
         modelValidation(id);
-        return EmployeeDTO.fromEmployee(employeeRepository.getById(id));
+        return EmployeeDTOMapper.fromEmployee(employeeRepository.getById(id));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void changeEmployeeById(EmployeeDTO employeeDTO, Integer id) {
-        Employee resultEmployee = employeeDTO.toEmployee();
+        Employee resultEmployee = EmployeeDTOMapper.toEmployee(employeeDTO);
         modelValidation(resultEmployee);
         resultEmployee.setId(employeeRepository
                 .findById(id)
@@ -104,18 +104,18 @@ public class EmployeeServiceImpl implements EmployeeService {
             return StreamSupport.stream(employeeRepository.findAll().spliterator(), false)
                     .toList()
                     .stream()
-                    .map(EmployeeDTO::fromEmployee)
+                    .map(EmployeeDTOMapper::fromEmployee)
                     .toList();
         } else {
             try {
                 return employeeRepository.returnAllByPositionId(Integer.parseInt(position)) //не знаю что лучше это (try) или instance of
                         .stream()
-                        .map(EmployeeDTO::fromEmployee)
+                        .map(EmployeeDTOMapper::fromEmployee)
                         .toList();
             } catch (NumberFormatException e) {
                 return employeeRepository.returnAllByPositionName(position)
                         .stream()
-                        .map(EmployeeDTO::fromEmployee)
+                        .map(EmployeeDTOMapper::fromEmployee)
                         .toList();
             }
         }
@@ -132,7 +132,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         try {
             int pageNumber = number.isBlank() ? 0 : Integer.parseInt(number);
             Pageable pageRequest = PageRequest.of(pageNumber, 10);
-            return employeeRepository.findAll(pageRequest).stream().map(EmployeeDTO::fromEmployee).toList();
+            return employeeRepository.findAll(pageRequest).stream().map(EmployeeDTOMapper::fromEmployee).toList();
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException();
         }
@@ -140,10 +140,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void createEmployeesByJson(MultipartFile file) throws IOException {
-        List<EmployeeDTO> list = new ObjectMapper().readValue(file.getInputStream(), new TypeReference<List<EmployeeDTO>>() {
+        List<EmployeeDTO> list = new ObjectMapper().readValue(file.getInputStream(), new TypeReference<>() {
         });
         employeeRepository.saveAll(list.stream()
-                .map(EmployeeDTO::toEmployee)
+                .map(EmployeeDTOMapper::toEmployee)
                 .toList());
     }
 }
