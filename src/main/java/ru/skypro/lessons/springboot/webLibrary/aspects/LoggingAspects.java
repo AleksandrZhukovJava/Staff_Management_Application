@@ -15,7 +15,7 @@ public class LoggingAspects {
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspects.class);
 
 
-
+    @Around("execution(* ru.skypro.lessons.springboot.webLibrary.service.*.*(..))")
     public Object logEmployeeServices(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         String methodName = proceedingJoinPoint.getSignature().getName();
         Object[] args = proceedingJoinPoint.getArgs();
