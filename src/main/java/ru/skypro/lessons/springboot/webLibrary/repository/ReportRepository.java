@@ -8,7 +8,7 @@ import ru.skypro.lessons.springboot.webLibrary.models.projections.ReportInfo;
 import java.util.List;
 
 public interface ReportRepository extends CrudRepository<Report,Integer> {
-    @Query(value = "SELECT new ru.skypro.lessons.springboot.webLibrary.models.projections.ReportInfo (p.name, count(p.name), max(e.salary), min(e.salary), avg(e.salary)) " +
-            "FROM Employee e JOIN FETCH Position p on e.position = p GROUP BY p.name")
+    @Query("SELECT new ru.skypro.lessons.springboot.webLibrary.models.projections.ReportInfo (COALESCE(p.name, 'Workers without position'), COUNT(e), MAX(e.salary), MIN(e.salary), AVG(e.salary)) " +
+            "FROM Employee e LEFT JOIN e.position p GROUP BY COALESCE(p.name, 'Workers without position')")
     List<ReportInfo> getReportInfo();
 }

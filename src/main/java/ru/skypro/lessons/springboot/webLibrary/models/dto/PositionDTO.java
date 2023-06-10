@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.skypro.lessons.springboot.webLibrary.domains.entity.Position;
 
 import java.io.Serializable;
 
@@ -15,17 +14,5 @@ import java.io.Serializable;
 public class PositionDTO implements Serializable {
     private Integer id;
     private String name;
-
-    public static PositionDTO fromPosition(Position employee) {
-        return PositionDTO.builder()
-                .id(employee.getId())
-                .name(employee.getName())
-                .build();
-
-    }
-
-    public Position toPosition() {
-        return new Position(this.id, this.name);
-    }
 
 }

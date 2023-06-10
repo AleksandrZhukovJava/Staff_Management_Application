@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.lessons.springboot.webLibrary.service.report.ReportService;
 
 import java.io.IOException;
-
 @RestController
 @RequestMapping("/report")
 @AllArgsConstructor
@@ -24,7 +23,7 @@ public class ReportController {
         return reportService.addReport();
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Resource> getEmployeeById(@PathVariable Integer id) {
+    public ResponseEntity<Resource> getReportById(@PathVariable Integer id) {
         String fileName = "report.json";
         Resource resource = new ByteArrayResource(reportService.getReportById(id));
         return ResponseEntity.ok()
