@@ -29,10 +29,8 @@ public class SecurityConfig {
     }
     private void customizeRequest(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
         try {
-            registry.requestMatchers(new AntPathRequestMatcher("/user/**"))
-                    .hasRole("USER")
-                    .requestMatchers(new AntPathRequestMatcher("/**"))
-                    .hasRole("ADMIN");
+            registry.requestMatchers(new AntPathRequestMatcher("/user/**")).hasRole("USER")
+                    .requestMatchers(new AntPathRequestMatcher("/**")).hasRole("ADMIN");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

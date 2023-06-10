@@ -18,7 +18,7 @@ public class Employee {
     private double salary;
     @Column(name = "name")
     private String name;
-    @ManyToOne (cascade = CascadeType.MERGE)
+    @ManyToOne (cascade = CascadeType.PERSIST)
     @JoinColumn(name = "position_id")
     private Position position;
 
