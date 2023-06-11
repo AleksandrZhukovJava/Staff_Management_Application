@@ -12,7 +12,7 @@ import ru.skypro.lessons.springboot.webLibrary.service.report.ReportService;
 
 import java.io.IOException;
 @RestController
-@RequestMapping("/report")
+@RequestMapping("/admin/report")
 @AllArgsConstructor
 @Tag(name = "Report data base actions")
 

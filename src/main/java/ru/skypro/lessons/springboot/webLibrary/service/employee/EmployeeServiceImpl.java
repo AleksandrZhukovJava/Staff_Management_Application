@@ -10,10 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.webLibrary.domains.entity.Employee;
 import ru.skypro.lessons.springboot.webLibrary.domains.entity.Position;
+import ru.skypro.lessons.springboot.webLibrary.exceptions.customexceptions.IllegalIdException;
 import ru.skypro.lessons.springboot.webLibrary.models.dto.EmployeeDTO;
 import ru.skypro.lessons.springboot.webLibrary.models.mapper.EmployeeDTOMapper;
 import ru.skypro.lessons.springboot.webLibrary.models.projections.EmployeesInfo;
 import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
+import ru.skypro.lessons.springboot.webLibrary.utility.Validation;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         modelValidation(resultEmployee);
         resultEmployee.setId(employeeRepository
                 .findById(id)
-                .orElseThrow(IllegalArgumentException::new)
+                .orElseThrow(() -> new IllegalIdException(id))
                 .getId());
         employeeRepository.save(resultEmployee);
     }
@@ -144,6 +147,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         });
         employeeRepository.saveAll(list.stream()
                 .map(EmployeeDTOMapper::toEmployee)
+                .peek(Validation::modelValidation)
                 .toList());
     }
 }
