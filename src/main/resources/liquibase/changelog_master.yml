@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/changesets/14062023_create_table_position.yml
+  - include:
+      file: liquibase/changesets/14062023_create_table_employee.yml
+  - include:
+      file: liquibase/changesets/14062023_create_table_report.yml
+  - include:
+      file: liquibase/changesets/14062023_create_table_role.yml
+  - include:
+      file: liquibase/changesets/14062023_create_table_user_auth.yml
+  - include:
+      file: liquibase/changesets/14062023_create_table_user_roles.yml
+
+

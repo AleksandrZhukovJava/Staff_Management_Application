@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: Aleksandr Zhukov
+      changes:
+        - tagDatabase:
+            tag: 4.0
+        - sql:
+            sql: |
+              CREATE TABLE role (
+              id BIGSERIAL PRIMARY KEY,
+              role VARCHAR(63) NOT NULL
+              );
+    rollback:
+      - dropTable:
+          tableName: role

@@ -12,18 +12,20 @@ import java.util.Arrays;
 @Aspect
 @Component
 public class LoggingAspects {
-    private static final Logger logger = LoggerFactory.getLogger(LoggingAspects.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspects.class);
 
 
-    @Around("execution(* ru.skypro.lessons.springboot.webLibrary.service.*.*(..))")
+    @Around("execution(* ru.skypro.lessons.springboot.webLibrary.service.*.*.*(..))")
     public Object logEmployeeServices(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         String methodName = proceedingJoinPoint.getSignature().getName();
         Object[] args = proceedingJoinPoint.getArgs();
-        if (args.length != 0)
-            logger.info("Was invoked method: " + methodName + " that take: " + Arrays.toString(args) + ".");
+        if (args.length != 0){
+            LOGGER.info("Was invoked method: {} that take: {}.",methodName,Arrays.toString(args));
+        }
         Object returnedByMethod = proceedingJoinPoint.proceed();
-        if (returnedByMethod != null)
-            logger.info("Was invoked method: " + methodName + " that returns: " + returnedByMethod + ".");
+        if (returnedByMethod != null){
+            LOGGER.info("Was invoked method: {} that returns: {}.",methodName,returnedByMethod );
+        }
         return returnedByMethod;
     }
 
@@ -31,10 +33,12 @@ public class LoggingAspects {
     public Object logEmployeeRepositories(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         String methodName = proceedingJoinPoint.getSignature().getName();
         Object returnedByMethod = proceedingJoinPoint.proceed();
-        if (returnedByMethod == null)
-            logger.debug("Successfully invoked method: " + methodName + ".");
-        else
-            logger.debug("Successfully invoked method: " + methodName + " and returns: " + returnedByMethod + ".");
+        if (returnedByMethod == null){
+            LOGGER.debug("Successfully invoked method: {}.",methodName);
+        }
+        else {
+            LOGGER.debug("Successfully invoked method: {} and returns: {}.",methodName,returnedByMethod);
+        }
 
         return returnedByMethod;
     }

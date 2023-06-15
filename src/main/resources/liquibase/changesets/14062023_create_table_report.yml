@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Aleksandr Zhukov
+      changes:
+        - tagDatabase:
+            tag: 3.0
+        - sql:
+            sql: |
+              CREATE TABLE report (
+              id BIGSERIAL PRIMARY KEY,
+              position_report OID
+              );
+    rollback:
+      - dropTable:
+          tableName: report
