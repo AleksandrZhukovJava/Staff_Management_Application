@@ -17,7 +17,6 @@
             <level>ERROR</level>
         </filter>
     </appender>
-
     <root level="DEBUG">
         <appender-ref ref="INFO_FILE"/>
         <appender-ref ref="ERROR_FILE"/>
