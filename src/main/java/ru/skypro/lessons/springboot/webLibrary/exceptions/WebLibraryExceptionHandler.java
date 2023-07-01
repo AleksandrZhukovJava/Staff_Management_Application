@@ -30,7 +30,7 @@ public class WebLibraryExceptionHandler {
     }
     @ExceptionHandler
     public ResponseEntity<?> handleIllegalIdException(IllegalIdException exception) {
-        logger.error("There is no employee with id = " + exception.getIdValue(), exception);
+        logger.error("There is no employee with id = " + exception.getVariableValue(), exception);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler

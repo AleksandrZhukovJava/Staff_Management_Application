@@ -5,9 +5,9 @@ import ru.skypro.lessons.springboot.webLibrary.exceptions.customexceptions.Illeg
 
 public class Validation {
     public static void modelValidation(Employee employee) throws IllegalIdException {
-        if (employee.getId() <= 0)
+        if (employee.getId() == null || employee.getId() <= 0)
             throw new IllegalIdException(employee.getId());
-        else if (employee.getName().isBlank() || employee.getSalary() < 0)
+        else if (employee.getName() == null ||employee.getName().isBlank() || employee.getSalary() < 0)
             throw new IllegalArgumentException();
     }
     public static void modelValidation(int id) throws IllegalIdException {

@@ -11,6 +11,3 @@ databaseChangeLog:
               id BIGSERIAL PRIMARY KEY,
               position_report OID
               );
-    rollback:
-      - dropTable:
-          tableName: report
