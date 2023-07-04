@@ -13,6 +13,3 @@ databaseChangeLog:
               username VARCHAR(63) PRIMARY KEY,
               enabled BOOLEAN NOT NULL 
               );
-    rollback:
-      - dropTable:
-          tableName: user_auth

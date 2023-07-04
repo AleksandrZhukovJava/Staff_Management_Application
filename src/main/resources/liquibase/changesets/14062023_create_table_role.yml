@@ -11,6 +11,3 @@ databaseChangeLog:
               id BIGSERIAL PRIMARY KEY,
               role VARCHAR(63) NOT NULL
               );
-    rollback:
-      - dropTable:
-          tableName: role

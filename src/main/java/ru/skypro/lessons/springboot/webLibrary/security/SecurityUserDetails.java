@@ -1,6 +1,7 @@
 package ru.skypro.lessons.springboot.webLibrary.security;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @AllArgsConstructor
+@Data
 public class SecurityUserDetails implements UserDetails {
     private UserDTO userDTO;
 

@@ -13,6 +13,3 @@ databaseChangeLog:
                 salary DOUBLE PRECISION,
                 position_id INT REFERENCES position (id)
               );
-    rollback:
-      - dropTable:
-         tableName: employee

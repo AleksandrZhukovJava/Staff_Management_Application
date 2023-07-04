@@ -29,45 +29,37 @@ import static ru.skypro.lessons.springboot.webLibrary.utility.Validation.modelVa
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
-
     @Override
     public double getSalarySum() {
         return employeeRepository.returnSumSalary();
     }
-
     @Override
     public List<EmployeeDTO> getMinSalaryEmployee() {
         return employeeRepository.returnMinSalaryEmployees().stream().map(EmployeeDTOMapper::fromEmployee).toList();
     }
-
     @Override
     public List<EmployeeDTO> getMaxSalaryEmployee() {
         return employeeRepository.returnMaxSalaryEmployees().stream().map(EmployeeDTOMapper::fromEmployee).toList();
     }
-
     @Override
     public List<EmployeeDTO> getAboveAveragePaidEmployees() {
         return employeeRepository.getAboveAveragePaidEmployees().stream().map(EmployeeDTOMapper::fromEmployee).toList();
     }
-
     @Override
     public List<EmployeeDTO> getEmployeesWithSalaryMoreThan(double salary) {
         modelValidation(salary);
         return employeeRepository.findAllBySalaryIsBiggerThan(salary).stream().map(EmployeeDTOMapper::fromEmployee).toList();
     }
-
     @Override
     public EmployeeDTO getEmployeeById(Integer id) {
         modelValidation(id);
         return EmployeeDTOMapper.fromEmployee(employeeRepository.getById(id));
     }
-
     @Override
     public void deleteEmployeeById(Integer id) {
         modelValidation(id);
         employeeRepository.deleteById(id);
     }
-
     @Override
     public void changeEmployeeById(EmployeeDTO employeeDTO, Integer id) {
         Employee resultEmployee = EmployeeDTOMapper.toEmployee(employeeDTO);
@@ -78,29 +70,22 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .getId());
         employeeRepository.save(resultEmployee);
     }
-
     @Override
     public void createEmployees(List<EmployeesInfo> listOfNewEmployeesDTO) {
         if (listOfNewEmployeesDTO != null) {
-            List<Employee> resultList = new ArrayList<>();
-            for (EmployeesInfo employeesInfo : listOfNewEmployeesDTO) {
-                Position position = employeeRepository.findPositionByName(employeesInfo.getPositionName());
-                resultList.add(new Employee(
-                        employeesInfo.getName(),
-                        employeesInfo.getSalary(),
-                        position != null ?
-                                position :
-                                new Position(employeesInfo.getPositionName())));
-            }
-            employeeRepository.saveAll(resultList);
+            employeeRepository.saveAll(listOfNewEmployeesDTO.stream().map(x -> {
+                Position position = employeeRepository.findPositionByName(x.getPositionName());
+                return new Employee(
+                        x.getName(),
+                        x.getSalary(),
+                        position != null ? position : new Position(x.getPositionName()));
+        }).toList());
         } else throw new IllegalArgumentException();
     }
-
     @Override
     public List<EmployeesInfo> findAllEmployeesView() {
         return employeeRepository.findAllEmployeesView();
     }
-
     @Override
     public List<EmployeeDTO> returnEmployeesByPosition(String position) {
         if (position == null || position.isBlank()) {
@@ -123,13 +108,11 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
         }
     }
-
     @Override
     public List<EmployeesInfo> returnAllEmployeesView(Integer id) {
         modelValidation(id);
         return employeeRepository.findEmployeeByIdView(id);
     }
-
     @Override
     public List<EmployeeDTO> returnEmployeesByPageNumber(String number) {
         try {
@@ -140,7 +123,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new IllegalArgumentException();
         }
     }
-
     @Override
     public void createEmployeesByJson(MultipartFile file) throws IOException {
         List<EmployeeDTO> list = new ObjectMapper().readValue(file.getInputStream(), new TypeReference<>() {

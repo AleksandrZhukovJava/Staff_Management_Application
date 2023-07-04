@@ -2,6 +2,8 @@ package ru.skypro.lessons.springboot.webLibrary.domains.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.parameters.P;
+import ru.skypro.lessons.springboot.webLibrary.models.projections.EmployeesInfo;
 
 @Entity
 @Table(name = "employee")
