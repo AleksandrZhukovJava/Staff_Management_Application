@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.security.core.parameters.P;
 import ru.skypro.lessons.springboot.webLibrary.models.projections.EmployeesInfo;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "employee")
 @AllArgsConstructor

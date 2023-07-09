@@ -5,13 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
 @Entity
 @Table(name = "position")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class Position {
+public class Position{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="10" author="Alexandr Zhukov">
+        <preConditions>
+            <tableExists tableName="user_auth"/>
+        </preConditions>
+        <insert tableName="user_auth">
+            <column name="id" value="1"/>
+            <column name="password" value="$2a$04$hwlFlDi79R4hy8iBgc9yV.q7K/eaIXRtHMI/Qp/fQeXrOsfSf9A8y"/>
+            <column name="username" value="Sasha"/>
+            <column name="enabled" value="true"/>
+        </insert>
+        <insert tableName="user_auth">
+            <column name="id" value="2"/>
+            <column name="password" value="$2a$04$P.r7D5da/9T9h2g4POTvseqR/pFqdjL5DMViXdkdcdVyJDU/qK6oi"/>
+            <column name="username" value="SkyPro"/>
+            <column name="enabled" value="true"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

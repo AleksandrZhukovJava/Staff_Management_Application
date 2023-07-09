@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PositionDTO implements Serializable {
+public class PositionDTO {
     private Integer id;
     private String name;
 

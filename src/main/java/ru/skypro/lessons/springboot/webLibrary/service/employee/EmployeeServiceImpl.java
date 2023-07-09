@@ -18,7 +18,6 @@ import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.webLibrary.utility.Validation;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -53,7 +52,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO getEmployeeById(Integer id) {
         modelValidation(id);
-        return EmployeeDTOMapper.fromEmployee(employeeRepository.getById(id));
+        return EmployeeDTOMapper.fromEmployee(employeeRepository.getEmployeeById(id).orElseThrow(IllegalIdException::new));
     }
     @Override
     public void deleteEmployeeById(Integer id) {
@@ -89,14 +88,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<EmployeeDTO> returnEmployeesByPosition(String position) {
         if (position == null || position.isBlank()) {
-            return StreamSupport.stream(employeeRepository.findAll().spliterator(), false)
-                    .toList()
+            return employeeRepository.findAll()
                     .stream()
                     .map(EmployeeDTOMapper::fromEmployee)
                     .toList();
         } else {
             try {
-                return employeeRepository.returnAllByPositionId(Integer.parseInt(position)) //не знаю что лучше это (try) или instance of
+                int id = Integer.parseInt(position);
+                modelValidation(id);
+                return employeeRepository.returnAllByPositionId(id)
                         .stream()
                         .map(EmployeeDTOMapper::fromEmployee)
                         .toList();
@@ -109,7 +109,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
     @Override
-    public List<EmployeesInfo> returnAllEmployeesView(Integer id) {
+    public EmployeesInfo returnAllEmployeesView(Integer id) {
         modelValidation(id);
         return employeeRepository.findEmployeeByIdView(id);
     }

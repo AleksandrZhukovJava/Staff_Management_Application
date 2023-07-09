@@ -57,7 +57,7 @@ public class EmployeeUserController {
     }
 
     @GetMapping("/{id}/fullInfo")
-    public List<EmployeesInfo> returnEmployeesByIdInfo(@PathVariable Integer id) {
+    public EmployeesInfo returnEmployeesByIdInfo(@PathVariable Integer id) {
         return employeeService.returnAllEmployeesView(id);
     }
 

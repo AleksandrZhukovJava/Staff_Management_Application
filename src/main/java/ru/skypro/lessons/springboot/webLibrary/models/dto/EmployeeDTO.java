@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeDTO implements Serializable {
+public class EmployeeDTO{
     private Integer id;
     private String name;
     private double salary;

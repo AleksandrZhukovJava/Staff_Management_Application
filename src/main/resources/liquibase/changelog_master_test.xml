@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+<!--Table creating-->
+    <include file="changesets/create_tables/06072023_create_table_position.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/create_tables/06072023_create_table_employee.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/create_tables/06072023_create_table_report.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/create_tables/06072023_create_table_role.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/create_tables/06072023_create_table_user_auth.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/create_tables/06072023_create_table_user_roles.xml" relativeToChangelogFile="true"/>
+<!--Test data adding-->
+    <include file="changesets/add_test_data/06072023_add_positions.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/add_test_data/06072023_add_employees.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/add_test_data/06072023_add_role.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/add_test_data/06072023_add_user_auth.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/add_test_data/06072023_add_user_roles.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

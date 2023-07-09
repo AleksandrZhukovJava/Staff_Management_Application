@@ -21,7 +21,7 @@ public interface EmployeeService {
     void createEmployees(List<EmployeesInfo> listOfNewEmployeesDTO);
     List<EmployeesInfo> findAllEmployeesView();
     List<EmployeeDTO> returnEmployeesByPosition(String position);
-    List<EmployeesInfo> returnAllEmployeesView(Integer id);
+    EmployeesInfo returnAllEmployeesView(Integer id);
     List<EmployeeDTO> returnEmployeesByPageNumber(String number);
     void createEmployeesByJson(MultipartFile file) throws IOException;
 }
