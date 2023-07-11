@@ -32,7 +32,7 @@ public class EmployeeAdminController {
         employeeService.createEmployees(listOfNewEmployeesDTO);
     }
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void createEmployeesByJson(@RequestParam("json") MultipartFile file) throws IOException {
+    public void createEmployeesByJson(MultipartFile file) throws IOException {
         employeeService.createEmployeesByJson(file);
     }
 }

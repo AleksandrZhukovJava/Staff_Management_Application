@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="8" author="Alexandr Zhukov">
+        <preConditions>
+            <tableExists tableName="employee"/>
+        </preConditions>
+        <insert tableName="employee">
+            <column name="name" value="Oleg"/>
+            <column name="salary" value="19000.00"/>
+            <column name="position_id" value="1"/>
+        </insert>
+        <insert tableName="employee">
+            <column name="name" value="Kostya"/>
+            <column name="salary" value="25000.00"/>
+            <column name="position_id" value="1"/>
+        </insert>
+        <insert tableName="employee">
+            <column name="name" value="Sasha"/>
+            <column name="salary" value="20000.00"/>
+            <column name="position_id" value="1"/>
+        </insert>
+        <insert tableName="employee">
+            <column name="name" value="Marina"/>
+            <column name="salary" value="30000.00"/>
+            <column name="position_id" value="2"/>
+        </insert>
+        <insert tableName="employee">
+            <column name="name" value="Dima"/>
+            <column name="salary" value="28000.00"/>
+            <column name="position_id" value="2"/>
+        </insert>
+        <insert tableName="employee">
+            <column name="name" value="Nastya"/>
+            <column name="salary" value="100000.00"/>
+            <column name="position_id" value="3"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

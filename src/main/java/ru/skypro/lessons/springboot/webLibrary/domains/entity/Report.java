@@ -16,7 +16,6 @@ public class Report implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Lob
     @Column(name = "position_report")
     private byte[] positionReport;
 }
