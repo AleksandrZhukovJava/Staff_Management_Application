@@ -40,16 +40,11 @@ public class EmployeeAdminControllerIntegrationTest {
     private PositionRepository positionRepository;
     @Autowired
     private ObjectMapper objectMapper;
-
     @Test
     void deleteEmployeeById_thenCheckActualListDoesNotContainEmployee() throws Exception {
-        Employee deletedEmployee = employeeRepository.findAllEmployees().stream().filter(x -> x.getId().equals(CORRECT_ID)).findFirst().get();
-
         mockMvc.perform(delete("/admin/employee/" + CORRECT_ID))
                 .andExpect(status().isOk());
-        List<Employee> actual = employeeRepository.findAllEmployees();
-
-        assertThat(actual).doesNotContain(deletedEmployee);
+        assertThat(employeeRepository.findById(CORRECT_ID).isPresent()).isFalse();
     }
 
     @Test
@@ -77,8 +72,8 @@ public class EmployeeAdminControllerIntegrationTest {
 
         Employee actual = employeeRepository.getEmployeeById(CORRECT_ID).get();
 
-        assertThat(actual.getName()).isNotEqualTo("Oleg");
-        assertThat(actual.getSalary()).isNotEqualTo(19000.00);
+        assertThat(actual.getName()).isEqualTo("Test Employee");
+        assertThat(actual.getSalary()).isEqualTo(120000.00);
     }
 
     @Test
@@ -132,6 +127,7 @@ public class EmployeeAdminControllerIntegrationTest {
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "position")
                 .containsExactlyInAnyOrderElementsOf(expected);
     }
+
     @Test
     void addEmployeesWithNewPositions_thenRepositoryAddNewPosition() throws Exception {
         List<EmployeesInfo> inputData = generateEmployeesInfo();
@@ -146,13 +142,13 @@ public class EmployeeAdminControllerIntegrationTest {
 
         assertThat(actual).containsAll(expected);
     }
+
     @Test
     void givenNullExceptList_thenReturn500Status() throws Exception {
-        mockMvc.perform(post("/admin/employee/")
-                        .content(objectMapper.writeValueAsString(null))
-                        .contentType(APPLICATION_JSON))
+        mockMvc.perform(post("/admin/employee/"))
                 .andExpect(status().is5xxServerError());
     }
+
     @Test
     void addEmployeeInDataBaseByJson() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile(
@@ -173,6 +169,7 @@ public class EmployeeAdminControllerIntegrationTest {
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("position")
                 .containsAnyElementsOf(EMPLOYEE_TEST_LIST);
     }
+
     @Test
     void givenIncorrectJson_thenReturn400Status() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile(
