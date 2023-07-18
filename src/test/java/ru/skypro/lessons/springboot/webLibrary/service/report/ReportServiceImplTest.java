@@ -68,11 +68,3 @@ public class ReportServiceImplTest {
     }
 
 }
-
-
-//
-//    @Override
-//    public byte[] getReportById(Integer id){
-//        modelValidation(id);
-//        return reportRepository.findById(id).orElseThrow(IllegalArgumentException::new).getPositionReport();
-//    }

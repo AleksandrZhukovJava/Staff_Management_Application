@@ -1,13 +1,17 @@
 package ru.skypro.lessons.springboot.webLibrary.controller;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import ru.skypro.lessons.springboot.webLibrary.domains.entity.Report;
 import ru.skypro.lessons.springboot.webLibrary.repository.ReportRepository;
 
@@ -22,7 +26,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser(roles = {"ADMIN", "USER"})
 @Transactional
-public class ReportControllerIntegrationTest {
+public class ReportControllerIntegrationTest{
+    @Container
+    @ServiceConnection
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:alpine")
+            .withUsername("postgres")
+            .withPassword("helloskypro");
+    @BeforeAll
+    public static void beforeAll() {
+        postgres.start();
+    }
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -48,13 +61,3 @@ public class ReportControllerIntegrationTest {
                 .andExpect(status().is4xxClientError());
     }
 }
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Resource> getReportById(@PathVariable Integer id) {
-//        String fileName = "report.json";
-//        Resource resource = new ByteArrayResource(reportService.getReportById(id));
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-//                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-//                .body(resource);
-//    }

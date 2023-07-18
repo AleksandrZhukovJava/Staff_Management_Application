@@ -1,12 +1,16 @@
 package ru.skypro.lessons.springboot.webLibrary.controller;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import ru.skypro.lessons.springboot.webLibrary.repository.EmployeeRepository;
 
 import static constants.TestConstances.*;
@@ -18,11 +22,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 @Transactional
+
 public class EmployeeUserControllerIntegrationTest {
+    @Container
+    @ServiceConnection
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:alpine")
+            .withUsername("postgres")
+            .withPassword("helloskypro");
+
+    @BeforeAll
+    public static void beforeAll() {
+        postgres.start();
+    }
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private EmployeeRepository employeeRepository;
+
     @Test
     void contextLoads() {
     }
@@ -50,6 +67,7 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$[1].name").value("Nastya"))
                 .andExpect(jsonPath("$[1].salary").value(100000.00));
     }
+
     @Test
     void deleteAllEmployeeFromDataBase_callEmployeesHighSalaryEmployees_thenReturnEmptyList() throws Exception {
         employeeRepository.deleteAll();
@@ -81,6 +99,7 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].name").value("Test Employee"))
                 .andExpect(jsonPath("$[0].salary").value(120000.00));
     }
+
     @Test
     void deleteAllEmployeeFromDataBase_callEmployeesWithMaxSalary_thenReturnEmptyList() throws Exception {
         employeeRepository.deleteAll();
@@ -112,6 +131,7 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].name").value("Test Employee One"))
                 .andExpect(jsonPath("$[0].salary").value(2.00));
     }
+
     @Test
     void deleteAllEmployeeFromDataBase_callEmployeesWithMinSalary_thenReturnEmptyList() throws Exception {
         employeeRepository.deleteAll();
@@ -150,20 +170,22 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$").isNumber())
                 .andExpect(jsonPath("$").value(0));
     }
+
     @Test
     void returnCorrectEmployeesWithSalaryMoreThan() throws Exception {
-        mockMvc.perform(get("/user/employee/salary/salaryHigherThan").param("salary","90000.00"))
+        mockMvc.perform(get("/user/employee/salary/salaryHigherThan").param("salary", "90000.00"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].name").value("Nastya"))
                 .andExpect(jsonPath("$[0].salary").value(100000.00));
     }
+
     @Test
     void givenAnotherEmployeeInDatabase_thenReturnCorrectEmployeesWithSalaryMoreThan() throws Exception {
         employeeRepository.save(EMPLOYEE_TEST_ONE);
 
-        mockMvc.perform(get("/user/employee/salary/salaryHigherThan").param("salary","90000.00"))
+        mockMvc.perform(get("/user/employee/salary/salaryHigherThan").param("salary", "90000.00"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(2))
@@ -173,11 +195,14 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$[1].salary").value(100000.00));
 
     }
-    @Test //tut
+
+    @Test
+        //tut
     void givenWrongParamToEndpoint_thenReturnBadRequestStatus() throws Exception {
-        mockMvc.perform(get("/user/employee/salary/salaryHigherThan").param("salary",""))
+        mockMvc.perform(get("/user/employee/salary/salaryHigherThan").param("salary", ""))
                 .andExpect(status().is4xxClientError());
     }
+
     @Test
     void returnCorrectEmployeeById() throws Exception {
         mockMvc.perform(get("/user/employee/" + CORRECT_ID))
@@ -186,6 +211,7 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Oleg"))
                 .andExpect(jsonPath("$.salary").value(19000.00));
     }
+
     @Test
     void returnCorrectEmployeeByIdTEst() throws Exception {
         employeeRepository.save(EMPLOYEE_TEST_ONE);
@@ -195,18 +221,23 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Test Employee"))
                 .andExpect(jsonPath("$.salary").value(120000.00));
     }
-    @Test//tut
+
+    @Test
+//tut
     void deleteAllEmployeeFromDataBase_thenReturnBadRequestStatus() throws Exception {
         employeeRepository.deleteAll();
 
         mockMvc.perform(get("/user/employee/" + CORRECT_ID))
                 .andExpect(status().is4xxClientError());
     }
-    @Test//tut
+
+    @Test
+//tut
     void givenWrongIdToEndpoint_thenReturnBadRequestStatus() throws Exception {
         mockMvc.perform(get("/user/employee/" + INCORRECT_ID))
                 .andExpect(status().is4xxClientError());
     }
+
     @Test
     void returnCorrectEmployeesInfo() throws Exception {
         mockMvc.perform(get("/user/employee/salary/all"))
@@ -214,6 +245,7 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(6));
     }
+
     @Test
     void deleteEmployeesFromDataBase_callReturnAllEmployeeInfoMethod_thanReturnEmptyList() throws Exception {
         employeeRepository.deleteAll();
@@ -223,8 +255,9 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
     }
+
     @Test
-    void  givePositionById_thenReturnCorrectEmployeesByPosition() throws Exception {
+    void givePositionById_thenReturnCorrectEmployeesByPosition() throws Exception {
         String positionId = "3";
         mockMvc.perform(get("/user/employee?position=" + positionId))
                 .andExpect(status().isOk())
@@ -232,8 +265,9 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].name").value("Nastya"))
                 .andExpect(jsonPath("$[0].salary").value(100000.00));
     }
+
     @Test
-    void  givePositionByName_thenReturnCorrectEmployeesByPosition() throws Exception {
+    void givePositionByName_thenReturnCorrectEmployeesByPosition() throws Exception {
         String positionName = "Director";
         mockMvc.perform(get("/user/employee?position=" + positionName))
                 .andExpect(status().isOk())
@@ -241,26 +275,30 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].name").value("Nastya"))
                 .andExpect(jsonPath("$[0].salary").value(100000.00));
     }
+
     @Test
-    void  giveBlankPosition_thenReturnAllEmployees() throws Exception {
+    void giveBlankPosition_thenReturnAllEmployees() throws Exception {
         mockMvc.perform(get("/user/employee?position="))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(6));
     }
+
     @Test
-    void  giveNotExistedId_thenReturnEmptyList() throws Exception {
+    void giveNotExistedId_thenReturnEmptyList() throws Exception {
         String positionId = "100";
         mockMvc.perform(get("/user/employee?position=" + positionId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
     }
+
     @Test
-    void  giveWrongPositionId_thenReturnEmptyList() throws Exception {
+    void giveWrongPositionId_thenReturnEmptyList() throws Exception {
         mockMvc.perform(get("/user/employee?position=" + INCORRECT_ID))
                 .andExpect(status().is4xxClientError());
     }
+
     @Test
     void giveNotExistedPosition_thenReturnEmptyList() throws Exception {
         String positionName = "Not correct position";
@@ -269,9 +307,10 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
     }
+
     @Test
     void returnCorrectEmployeeInfoById() throws Exception {
-        mockMvc.perform(get(String.format("/user/employee/%s/fullInfo",CORRECT_ID)))
+        mockMvc.perform(get(String.format("/user/employee/%s/fullInfo", CORRECT_ID)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.name").value("Oleg"))
@@ -283,6 +322,7 @@ public class EmployeeUserControllerIntegrationTest {
         mockMvc.perform(get(String.format("/user/employee/%s/fullInfo", INCORRECT_ID)))
                 .andExpect(status().is4xxClientError());
     }
+
     @Test
     void giveNotExistedId_thenReturnEmptyJson() throws Exception {
         String notExistedId = "100";
@@ -290,6 +330,7 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").doesNotExist());
     }
+
     @Test
     void givenFirstPageNumber_thenReturnCorrectArray() throws Exception {
         mockMvc.perform(get("/user/employee/page?page=" + 0))
@@ -297,6 +338,7 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(6));
     }
+
     @Test
     void givenTooBigPageNumber_thenReturnEmptyArray() throws Exception {
         mockMvc.perform(get("/user/employee/page?page=" + 1))
@@ -304,6 +346,7 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
     }
+
     @Test
     void givenEmptyPageNumber_thenReturnCorrectArray() throws Exception {
         mockMvc.perform(get("/user/employee/page?page="))
@@ -311,11 +354,13 @@ public class EmployeeUserControllerIntegrationTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(6));
     }
+
     @Test
     void givenWrongPageNumber_thenReturnCorrectArray() throws Exception {
         mockMvc.perform(get("/user/employee/page?page=" + -1))
                 .andExpect(status().is4xxClientError());
     }
+
     @Test
     void givenIncorrectPageNumber_thenReturnCorrectArray() throws Exception {
         String incorrectPageNumber = "page";
