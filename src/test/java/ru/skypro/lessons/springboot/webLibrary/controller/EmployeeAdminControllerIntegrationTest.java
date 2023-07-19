@@ -1,14 +1,18 @@
 package ru.skypro.lessons.springboot.webLibrary.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import config.PostgresqlDatabaseConnection;
+import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,18 +38,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser(roles = {"ADMIN", "USER"})
 @Transactional
-public class EmployeeAdminControllerIntegrationTest {
-    @Container
-    @ServiceConnection
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:alpine")
-            .withUsername("postgres")
-            .withPassword("helloskypro");
-
-    @BeforeAll
-    public static void beforeAll() {
-        postgres.start();
-    }
-
+public class EmployeeAdminControllerIntegrationTest{
+    @ClassRule
+    public static PostgresqlDatabaseConnection postgresqlDatabaseConnection = PostgresqlDatabaseConnection.getInstance();
     @Autowired
     private MockMvc mockMvc;
     @Autowired

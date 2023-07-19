@@ -1,5 +1,7 @@
 package ru.skypro.lessons.springboot.webLibrary.controller;
 
+import config.PostgresqlDatabaseConnection;
+import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser(roles = {"ADMIN", "USER"})
 @Transactional
 public class ReportControllerIntegrationTest{
-    @Container
-    @ServiceConnection
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:alpine")
-            .withUsername("postgres")
-            .withPassword("helloskypro");
-    @BeforeAll
-    public static void beforeAll() {
-        postgres.start();
-    }
+    @ClassRule
+    public static PostgresqlDatabaseConnection postgresqlDatabaseConnection = PostgresqlDatabaseConnection.getInstance();
     @Autowired
     MockMvc mockMvc;
     @Autowired
