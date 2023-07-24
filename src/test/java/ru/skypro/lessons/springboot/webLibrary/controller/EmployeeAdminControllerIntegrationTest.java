@@ -1,15 +1,19 @@
 package ru.skypro.lessons.springboot.webLibrary.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import ru.skypro.lessons.springboot.webLibrary.domains.entity.Employee;
 import ru.skypro.lessons.springboot.webLibrary.domains.entity.Position;
 import ru.skypro.lessons.springboot.webLibrary.models.dto.EmployeeDTO;
@@ -31,6 +35,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser(roles = {"ADMIN", "USER"})
 @Transactional
 public class EmployeeAdminControllerIntegrationTest {
+    @Container
+    @ServiceConnection
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:alpine")
+            .withUsername("postgres")
+            .withPassword("helloskypro");
+
+    @BeforeAll
+    public static void beforeAll() {
+        postgres.start();
+    }
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,6 +54,7 @@ public class EmployeeAdminControllerIntegrationTest {
     private PositionRepository positionRepository;
     @Autowired
     private ObjectMapper objectMapper;
+
     @Test
     void deleteEmployeeById_thenCheckActualListDoesNotContainEmployee() throws Exception {
         mockMvc.perform(delete("/admin/employee/" + CORRECT_ID))

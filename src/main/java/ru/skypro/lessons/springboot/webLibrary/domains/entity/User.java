@@ -30,3 +30,4 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 }
+//cp /mnt/c/C:\Users\Санёчек\IdeaProjects\webLibrary\target\webLibrary-0.0.1-SNAPSHOT.jar ebLibrary-0.0.1-SNAPSHOT.jar

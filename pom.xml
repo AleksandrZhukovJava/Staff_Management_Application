@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.6</version>
+        <version>3.1.0</version>
         <relativePath/>
     </parent>
     <groupId>ru.skypro.lessons.springboot</groupId>
@@ -96,7 +96,23 @@
             <artifactId>javafaker</artifactId>
             <version>1.0.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.18.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>1.17.6</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -111,6 +127,35 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.dkanejs.maven.plugins</groupId>
+                <artifactId>docker-compose-maven-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <id>up</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>up</goal>
+                        </goals>
+                        <configuration>
+                            <composeFile>${project.basedir}/docker-compose.yaml</composeFile>
+                            <detachedMode>true</detachedMode>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>down</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>down</goal>
+                        </goals>
+                        <configuration>
+                            <composeFile>${project.basedir}/docker-compose.yaml</composeFile>
+                            <detachedMode>true</detachedMode>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
