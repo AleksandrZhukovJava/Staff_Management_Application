@@ -1,6 +1,8 @@
 package ru.skypro.lessons.springboot.webLibrary.controller;
 
 
+import config.PostgresqlDatabaseConnection;
+import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,18 +20,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class PostgresqlIntegrationTest{
-    @Container
-    @ServiceConnection
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:alpine")
-            .withUsername("postgres")
-            .withPassword("helloskypro");
+    @ClassRule
+    public static PostgresqlDatabaseConnection postgresqlDatabaseConnection = PostgresqlDatabaseConnection.getInstance();
     @Autowired
     private DataSource dataSource;
 
     @Test
     @DisplayName("Connection to temporary postgresql database container established")
     void testPostgresqlConnection() throws SQLException {
-        postgres.start();
         try (Connection conn = dataSource.getConnection()) {
             assertThat(conn).isNotNull();
         }
