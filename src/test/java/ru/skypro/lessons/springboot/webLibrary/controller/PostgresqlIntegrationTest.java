@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Import;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
@@ -19,9 +20,10 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Import(PostgresqlDatabaseConnection.class)
 public class PostgresqlIntegrationTest{
-    @ClassRule
-    public static PostgresqlDatabaseConnection postgresqlDatabaseConnection = PostgresqlDatabaseConnection.getInstance();
+    @Autowired
+    public PostgresqlDatabaseConnection postgresqlDatabaseConnection;
     @Autowired
     private DataSource dataSource;
 

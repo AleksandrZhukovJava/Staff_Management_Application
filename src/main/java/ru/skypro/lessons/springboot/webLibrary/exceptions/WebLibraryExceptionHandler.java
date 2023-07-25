@@ -8,7 +8,6 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.skypro.lessons.springboot.webLibrary.exceptions.customexceptions.IllegalIdException;
 

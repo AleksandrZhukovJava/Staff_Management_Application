@@ -8,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -21,9 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser
+@Import(PostgresqlDatabaseConnection.class)
 public class InfoControllerIntegrationTest{
-    @ClassRule
-    public static PostgresqlDatabaseConnection postgresqlDatabaseConnection = PostgresqlDatabaseConnection.getInstance();
+    @Autowired
+    public PostgresqlDatabaseConnection postgresqlDatabaseConnection;
     @Autowired
     MockMvc mockMvc;
     @Value("${app.env}")
